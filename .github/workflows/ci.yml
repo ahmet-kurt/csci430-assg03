@@ -1,0 +1,48 @@
+name: CI Tests
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    if: ${{ !github.event.repository.is_template }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: test successfully builds (25 pts)
+        if: ${{ !cancelled() }}
+        run: |
+          make clean
+          make
+      - name: Task 0 State loadState() operations (10 pts)
+        if: ${{ !cancelled() }}
+        run: |
+          make
+          ./test --list-test-names-only [task0] | grep . && ./test [task0]
+      - name: Task 1 needsAreMet member function (15 pts)
+        if: ${{ !cancelled() }}
+        run: |
+          make
+          ./test --list-test-names-only [task1] | grep . && ./test [task1]
+      - name: Task 2 findCandidateProcess member function (15 pts)
+        if: ${{ !cancelled() }}
+        run: |
+          make
+          ./test --list-test-names-only [task2] | grep . && ./test [task2]
+      - name: Task 3 releaseAllocatedResources member function (15 pts)
+        if: ${{ !cancelled() }}
+        run: |
+          make
+          ./test --list-test-names-only [task3] | grep . && ./test [task3]
+      - name: Task 4 isSafe member function (15 pts)
+        if: ${{ !cancelled() }}
+        run: |
+          make
+          ./test --list-test-names-only [task4] | grep . && ./test [task4]
+      - name: system tests (5 pts)
+        if: ${{ !cancelled() }}
+        run: |
+          make
+          ./scripts/run-system-tests
